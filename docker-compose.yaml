@@ -1,0 +1,38 @@
+nginx:
+   image: nginx:1.14.0
+   container_name: nginx
+   ports:
+    - 80:80
+    - 443:443
+   links:
+    - php
+   volumes:
+     - ./www:/usr/share/nginx/html:rw
+     - ./nginx:/etc/nginx/conf.d:rw
+
+redis:
+   image: redis:3.0
+   container_name: redis
+   ports:
+     - 6379:6379
+
+mysql:
+  image: mysql:8.0
+  container_name: mysql
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+  volumes:
+    - ./mysql:/var/lib/mysql:rw
+  ports:
+    - 3307:3306
+
+php:
+   image: myphp
+   container_name: php
+   links:
+    - redis
+    - mysql
+   volumes:
+     - ./www:/var/www/html:rw
+
+
